@@ -40,7 +40,7 @@ router.post('/users/logout', auth, async (req,res) => {
 })
 
 router.get('/users/currentuser', auth, async (req,res) => {
-    res.send(req.user)
+    res.send({user: req.user, token: req.token})
 })
 
 module.exports = router
