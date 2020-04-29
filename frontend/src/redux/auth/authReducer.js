@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-    auth: ""
+    authuser: ""
 }
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -7,7 +7,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
         case 'FETCH_USER':
             return{
                 ...state,
-                auth: action.payload
+                authuser: action.payload
             }
         default:
             return state;

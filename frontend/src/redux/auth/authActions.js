@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from "../../axios/axios";
 
-export const fetchUser = async () => {
+export const fetchUser =  () => async (dispatch) => {
     const user = await axios.get('/users/currentuser')
 
-    return{
+    dispatch({
         type: 'FETCH_USER',
-        payload: user
-    }
+        payload: user.data
+    })
 }
