@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const ErrorMsg = require('../models/error');
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -52,10 +53,11 @@ UserSchema.methods.generateAuthToken = async function() {
     return token
 }
 
-UserSchema.statics.getCredentialByEmail = async (email, password) => {
+UserSchema.statics.getCredentialByEmail = async (email, password, next) => {
     const user = await User.findOne({ email })
     if(!user){
-        throw new Error("No User")
+        let error = new ErrorMsg('No User Found!', 404)
+        return next(error)
     }
 
     const match = await bcrypt.compare(password,user.password)
