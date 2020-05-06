@@ -27,6 +27,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength: 7
     },
+    confpassword: {
+        type: String,
+        required: true,
+        minlength: 7
+    },
     tokens: [{
         token: {
             type: String,
@@ -51,21 +56,6 @@ UserSchema.methods.generateAuthToken = async function() {
     user.tokens = user.tokens.concat({token})
     await user.save()
     return token
-}
-
-UserSchema.statics.getCredentialByEmail = async (email, password, next) => {
-    const user = await User.findOne({ email })
-    if(!user){
-        let error = new ErrorMsg('No User Found!', 404)
-        return next(error)
-    }
-
-    const match = await bcrypt.compare(password,user.password)
-    if(!match){
-        throw new Error("Invalid Credentials")
-    }
-
-    return user
 }
 
 UserSchema.pre('save', async function(next){

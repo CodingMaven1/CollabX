@@ -10,7 +10,7 @@ class App extends React.Component {
 
   componentDidMount(){
     let {fetchUser} = this.props;
-    fetchUser()
+    // fetchUser()
   }
 
   render(){

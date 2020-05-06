@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios"
+import axios from "../../axios/axios"
 import './auth.scss';
 
 class Auth extends React.Component{
@@ -10,15 +10,13 @@ class Auth extends React.Component{
     }
 
     onChangeHandler = (event, type) => {
-        event.preventDefault()
         let data = this.state;
         data[type] = event.target.value
         this.setState({data})
     }
 
-    onSubmitHandler = (e) => {
-
-        e.preventDefault()
+    onSubmitHandler = async (event) => {
+        event.preventDefault()
 
         let data = {
             email: this.state.email,
@@ -26,7 +24,14 @@ class Auth extends React.Component{
         }
 
         console.log(data)
-        axios.post('http://localhost:5000/users/login', data).then(res => console.log(res));
+        try{
+            const user = await axios.post('/users/login', data)
+            const recieved = await user.json()
+            console.log(recieved)
+        } catch(e){
+            console.log(e.response.data.message)
+        }
+
     }
 
     render(){

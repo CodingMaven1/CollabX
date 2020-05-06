@@ -1,15 +1,29 @@
 const User = require('../models/user');
 const validator = require('validator');
 const ErrorMsg = require('../models/error');
+const bcrypt = require("bcryptjs");
+
 
 const createUser = async (req,res, next) => {
-    const {name, email, password} = req.body
+    const {name, email, password, confpassword} = req.body
 
     if(validator.isEmpty(name) || validator.isEmpty(email) || validator.isEmpty(password)){
         const error = new ErrorMsg('All fields are required', 400)
         return next(error)
     }
-    const user = new User(req.body)
+    else if(!validator.isEmail(email)){
+        const error = new ErrorMsg('Please enter a valid email', 400)
+        return next(error)
+    }
+    else if(password !== confpassword){
+        const error = new ErrorMsg('The passwords do not match', 400)
+        return next(error)
+    }
+    else if(validator.isLength(password, {min:8})){
+        const error = new ErrorMsg('Password must be of 8 characters', 400)
+        return next(error)
+    }
+    let user = new User(req.body)
 
     try{
         const token = await user.generateAuthToken();
@@ -20,9 +34,21 @@ const createUser = async (req,res, next) => {
     }
 }
 
-const loginUser = async (req,res) => {
+const loginUser = async (req,res,next) => {
     try{
-        const user = await User.getCredentialByEmail(req.body.email,req.body.password)
+        let {email,password} = req.body
+        const user = await User.findOne({email})
+        if(!user){
+            const error = new ErrorMsg('Please Signup first!', 404)
+            return next(error)
+        }
+
+        const match = await bcrypt.compare(password,user.password)
+        if(!match){
+            const error = new ErrorMsg('Invalid Credentials! Please try again', 400)
+            return next(error)
+        }
+
         const token = await user.generateAuthToken()
         res.send({user, token})
     } catch(error){
