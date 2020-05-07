@@ -1,0 +1,26 @@
+.Input{
+    height: 5vh;
+    width: 17vw;
+    background-color: transparent;
+    border: 1px solid #fdfffc;
+    color: #fdfffc;
+    border-radius: 1rem;
+    font-size: 2rem;
+    padding-left: 2rem;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 2vh;
+
+    &::placeholder{
+        font-size: 2rem;
+        color: #fdfffc;
+    }
+
+    &:placeholder-shown{
+        padding-left: 2rem;
+    }
+
+    &:focus{
+        outline: none;
+        border-color: #ffa737;
+    }
+}

@@ -45,6 +45,7 @@ UserSchema.methods.toJSON = function(){
     let userObject = user.toObject()
 
     delete userObject.password
+    delete userObject.confpassword
     delete userObject.tokens
 
     return userObject
@@ -62,6 +63,7 @@ UserSchema.pre('save', async function(next){
     const user = this
     if(user.isModified("password")){
         user.password = await bcrypt.hash(user.password, 8)
+        user.confpassword = await bcrypt.hash(user.password, 8)
     }
     next()
 })

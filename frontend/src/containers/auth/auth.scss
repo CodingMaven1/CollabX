@@ -1,0 +1,67 @@
+@mixin flexCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Auth{
+    height: 100vh;
+    width: 100vw;
+    background-color: #1b2021;
+    @include flexCenter;
+
+    &--ContainerLogin{
+        height: 45%;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        color: #fdfffc;
+    }
+
+    &--ContainerSignup{
+        height: 60%;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        color: #fdfffc;
+    }
+
+    &--Heading{
+        font-size: 5rem;
+        color: #ffa737;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    &--Title{
+        font-size: 3rem;
+        font-weight: 300;
+    }
+
+    &--Span{
+        color: #ffa737;
+        padding-left: 2rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+        cursor: pointer;
+    }
+
+    &--Form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &--Error{
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #fe5f55;
+        margin-bottom: 2vh;
+    }
+}

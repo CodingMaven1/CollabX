@@ -19,7 +19,7 @@ const createUser = async (req,res, next) => {
         const error = new ErrorMsg('The passwords do not match', 400)
         return next(error)
     }
-    else if(validator.isLength(password, {min:8})){
+    else if(password.length < 8){
         const error = new ErrorMsg('Password must be of 8 characters', 400)
         return next(error)
     }
@@ -37,7 +37,7 @@ const createUser = async (req,res, next) => {
 const loginUser = async (req,res,next) => {
     try{
         let {email,password} = req.body
-        const user = await User.findOne({email})
+        let user = await User.findOne({email})
         if(!user){
             const error = new ErrorMsg('Please Signup first!', 404)
             return next(error)
@@ -52,7 +52,7 @@ const loginUser = async (req,res,next) => {
         const token = await user.generateAuthToken()
         res.send({user, token})
     } catch(error){
-        res.status(400).send()
+        res.status(404).send()
     }
 }
 
