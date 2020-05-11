@@ -8,7 +8,8 @@ class Auth extends React.Component{
     state={
         user: {
             data: '',
-            error: ''
+            errorLogin: '',
+            errorSignup: ''
         },
         handler: 'login',
         login:{
@@ -56,11 +57,9 @@ class Auth extends React.Component{
                 const userinfo = await api.post('/users/login', data)
                 user.data = userinfo
                 this.setState({user})
-                // console.log(user.data)
             } catch(e){
-                user.error = e.response.data.message
+                user.errorLogin = e.response.data.message
                 this.setState({user})
-                // console.log(e.response.data.message)
             }
         }
         else{
@@ -75,11 +74,9 @@ class Auth extends React.Component{
                 const userinfo = await api.post('/users/signup', data)
                 user.data = userinfo
                 this.setState({user})
-                // console.log(user.data)
             } catch(e){
-                user.error = e.response.data.message
+                user.errorSignup = e.response.data.message
                 this.setState({user})
-                // console.log(e.response.data.message)
             }
         }
 
@@ -95,7 +92,7 @@ class Auth extends React.Component{
                             <form className="Auth--Form">
                                 <Input type="email" value={login.email} change={e => this.onChangeHandler(e,"email")} placeholder="Email" />
                                 <Input type="password" value={login.password} change={e => this.onChangeHandler(e,"password")} placeholder="Password" />
-                                <h1 className="Auth--Error">{user.error}</h1>
+                                <h1 className="Auth--Error">{user.errorLogin}</h1>
                                 <input type="submit" onClick={event => this.onSubmitHandler(event)} />
                             </form>
                         </div>
@@ -109,7 +106,7 @@ class Auth extends React.Component{
                                 <Input type="email" value={signup.email} change={e => this.onChangeHandlerSignup(e,"email")} placeholder="Email" />
                                 <Input type="password" value={signup.password} change={e => this.onChangeHandlerSignup(e,"password")} placeholder="Password" />
                                 <Input type="password" value={signup.confpassword} change={e => this.onChangeHandlerSignup(e,"confpassword")} placeholder="Confirm Password" />
-                                <h1 className="Auth--Error">{user.error}</h1>
+                                <h1 className="Auth--Error">{user.errorSignup}</h1>
                                 <input type="submit" onClick={event => this.onSubmitHandler(event)} />
                             </form>
                         </div>
