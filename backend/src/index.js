@@ -1,6 +1,7 @@
 const express = require('express');
 var cors = require('cors');
 const userRouter = require('./routers/user')
+const newsRouter = require('./routers/news')
 require('./db/mongoose');
 
 const app = express();
@@ -9,6 +10,7 @@ const port = process.env.PORT || 5000
 app.use(cors());
 app.use(express.json());
 app.use('/api/users', userRouter)
+app.use('/api/news', newsRouter)
 
 app.use((error, req, res, next) => {
     if (res.headerSent) {
