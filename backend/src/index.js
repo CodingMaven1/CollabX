@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors');
 const userRouter = require('./routers/user')
 const newsRouter = require('./routers/news')
+const collabRouter = require('./routers/collab')
 require('./db/mongoose');
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/users', userRouter)
 app.use('/api/news', newsRouter)
+app.use('/api/collab', collabRouter)
 
 app.use((error, req, res, next) => {
     if (res.headerSent) {
