@@ -40,6 +40,12 @@ const UserSchema = new mongoose.Schema({
     }]
 })
 
+UserSchema.virtual('collabs', {
+    ref: 'collab',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 UserSchema.methods.toJSON = function(){
     let user = this
     let userObject = user.toObject()
