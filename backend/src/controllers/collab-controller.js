@@ -52,6 +52,53 @@ const GetUserCollab = async (req, res, next) => {
     }
 }
 
+const UpdateUserCollab = async (req,res, next) => {
+    const updatationKeys = Object.keys(req.body)
+    const allowed = ["name","description","language"]
+    const valid = updatationKeys.every((key) => {
+        return allowed.includes(key)
+    })
+
+    if(!valid){
+        const error = new ErrorMsg('Please fill the required fields!',400)
+        return next(error)
+    }
+
+    try{
+        const collab = await Collab.findOne({_id: req.params.id, owner: req.user._id})
+        if(!collab){
+            const error = new ErrorMsg('No such collab request exists to update!',400)
+            return next(error)
+        }
+        updatationKeys.forEach((key) => {
+            collab[key] = req.body[key]
+        })
+
+        await collab.save()
+
+        res.send(collab)
+    } catch(e){
+        const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
+        return next(error)
+    }
+}
+
+const DeletUserCollab = async (req,res,next) => {
+    try{
+        const collab = await Collab.findOneAndDelete({_id: req.params.id, owner: req.user._id})
+        if(!collab){
+            const error = new ErrorMsg('No such collab request exists to delete!',400)
+            return next(error)
+        } 
+        res.send(collab)
+    } catch(e){
+        const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
+        return next(error)
+    }
+}
+
 exports.CreateCollab = CreateCollab
 exports.GetAllCollab = GetAllCollab
 exports.GetUserCollab = GetUserCollab
+exports.DeletUserCollab = DeletUserCollab
+exports.UpdateUserCollab = UpdateUserCollab

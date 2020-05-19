@@ -10,4 +10,8 @@ router.get('/getusercollab',auth, collabController.GetUserCollab)
 
 router.get('/getallcollab', collabController.GetAllCollab)
 
+router.patch('/updatecollab/:id',auth, collabController.UpdateUserCollab)
+
+router.delete('/deletecollab/:id',auth, collabController.DeletUserCollab)
+
 module.exports = router
