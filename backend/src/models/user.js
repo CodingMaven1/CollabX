@@ -37,6 +37,14 @@ const UserSchema = new mongoose.Schema({
             type: String,
             required: true
         }
+    }],
+    connections: [{
+        connection: {
+            type: mongoose.Schema.Types.ObjectId
+        },
+        status: {
+            type: String
+        }
     }]
 })
 

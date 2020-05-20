@@ -17,7 +17,15 @@ const CollabSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Users'
-    }
+    },
+    collaborators: [{
+        collaborator: {
+            type: mongoose.Schema.Types.ObjectId
+        },
+        status: {
+            type: String
+        }
+    }]
 })
 
 const Collab = mongoose.model('collab', CollabSchema)
