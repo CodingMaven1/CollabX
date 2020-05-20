@@ -42,9 +42,11 @@ const UserSchema = new mongoose.Schema({
         connection: {
             type: mongoose.Schema.Types.ObjectId
         },
-        status: {
-            type: String
-        }
+        collaborations: [{
+            collabid: {
+                type: mongoose.Schema.Types.ObjectId
+            }
+        }]
     }]
 })
 

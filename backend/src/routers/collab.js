@@ -14,4 +14,8 @@ router.patch('/updatecollab/:id',auth, collabController.UpdateUserCollab)
 
 router.delete('/deletecollab/:id',auth, collabController.DeletUserCollab)
 
+router.patch('/reqcollaboration/:id',auth, collabController.RequestCollaboration)
+
+router.patch('/confcollaboration/:id',auth, collabController.ConfirmCollaboration)
+
 module.exports = router

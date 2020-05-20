@@ -1,4 +1,5 @@
 const Collab = require('../models/collab');
+const User = require('../models/user')
 const validator = require('validator')
 const ErrorMsg = require('../models/error');
 
@@ -97,8 +98,69 @@ const DeletUserCollab = async (req,res,next) => {
     }
 }
 
+const RequestCollaboration = async (req,res,next) => {
+    const id = req.params.id
+    const userid = req.user._id
+    try{
+        const collab = await Collab.findOne({_id: id})
+        if(!collab){
+            const error = new ErrorMsg('No such collab request exists!',400)
+            return next(error)
+        }
+        collab.collaborators.push({collaborator: userid, status: null})
+        await collab.save()
+
+        res.send(collab)
+    } catch(e) {
+        const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
+        return next(error)
+    }
+}
+
+const ConfirmCollaboration = async (req,res,next) => {
+    const id = req.params.id
+    const {status, userid} = req.body
+    try{
+        let collab = await Collab.findOne({_id: id})
+        if(!collab){
+            const error = new ErrorMsg('No such collab request exists!',400)
+            return next(error)
+        }
+        let collabindex;
+        let collaborators = collab.collaborators
+        for(let i=0; i<collaborators.length; i++){
+            if(collaborators[i].collaborator == userid){
+                collabindex = i
+            }
+        }
+        console.log(collabindex, collaborators)
+        if(status === "No"){
+            collab.collaborators[collabindex].status = "No"
+            await collab.save()
+            res.send(collab)
+        }
+        else{
+            let user = await User.findOne({_id: userid})
+            user.connections.push({connection: req.user._id})
+            let index = user.connections.length
+            user.connections[index-1].collaborations.push({collabid: id})
+            collab.collaborators[collabindex].status = "Yes"
+            await collab.save()
+            await user.save()
+
+            res.send({user, collab})
+        }
+
+    } catch(e) {
+        const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
+        return next(error)
+    }
+}
+
 exports.CreateCollab = CreateCollab
 exports.GetAllCollab = GetAllCollab
 exports.GetUserCollab = GetUserCollab
 exports.DeletUserCollab = DeletUserCollab
 exports.UpdateUserCollab = UpdateUserCollab
+exports.RequestCollaboration = RequestCollaboration
+exports.ConfirmCollaboration = ConfirmCollaboration
