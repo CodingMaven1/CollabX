@@ -73,7 +73,20 @@ const currentUser = async (req,res) => {
     res.send({user: req.user, token: req.token})
 }
 
+const getConnections = async (req, res,next) => {
+    const id = req.user._id
+    try{
+        let user = await User.findOne({_id: id})
+        let connections = user["connections"]
+        res.send(connections)
+    } catch(e){
+        const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
+        return next(error)
+    }
+}
+
 exports.createUser = createUser;
 exports.loginUser = loginUser;
 exports.logoutUser = logoutUser;
 exports.currentUser = currentUser;
+exports.getConnections = getConnections;

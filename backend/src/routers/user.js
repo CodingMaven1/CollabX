@@ -11,4 +11,6 @@ router.post('/logout', auth, userController.logoutUser)
 
 router.get('/currentuser', auth, userController.currentUser)
 
+router.get('/getconnections',auth, userController.getConnections)
+
 module.exports = router
