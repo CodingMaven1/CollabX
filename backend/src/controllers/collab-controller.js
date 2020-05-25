@@ -126,24 +126,47 @@ const ConfirmCollaboration = async (req,res,next) => {
             const error = new ErrorMsg('No such collab request exists!',400)
             return next(error)
         }
-        let collabindex;
+        if(!req.user._id.equals(collab.owner)){
+            const error = new ErrorMsg('You are not authorized!',400)
+            return next(error)
+        }
+        let collabindex = null;
         let collaborators = collab.collaborators
         for(let i=0; i<collaborators.length; i++){
-            if(collaborators[i].collaborator == userid){
+            if(collaborators[i].collaborator.equals(userid)){
                 collabindex = i
             }
         }
+        if(collabindex == null){
+            const error = new ErrorMsg('No such collborator exists!',400)
+            return next(error)
+        }
         console.log(collabindex, collaborators)
-        if(status === "No"){
+        if(status == "No"){
             collab.collaborators[collabindex].status = "No"
             await collab.save()
             res.send(collab)
         }
         else{
             let user = await User.findOne({_id: userid})
-            user.connections.push({connection: req.user._id})
-            let index = user.connections.length
-            user.connections[index-1].collaborations.push({collabid: id})
+            let connections = user.connections;
+            let useridx = null;
+            console.log(connections.length)
+            for(let j=0; j < connections.length; j++){
+                if(connections[j].connection.equals(req.user._id)){
+                    console.log(connections[j].connection.equals(req.user_id))
+                    useridx = j
+                }
+            }
+            console.log(useridx)
+            if(useridx != null){
+                user.connections[useridx].collaborations.push({collabid: id})
+            }
+            else{
+                user.connections.push({connection: req.user._id})
+                let index = user.connections.length
+                user.connections[index-1].collaborations.push({collabid: id})
+            }
             collab.collaborators[collabindex].status = "Yes"
             await collab.save()
             await user.save()

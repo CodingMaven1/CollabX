@@ -74,11 +74,28 @@ const currentUser = async (req,res) => {
 }
 
 const getConnections = async (req, res,next) => {
-    const id = req.user._id
+    // const id = req.user._id
     try{
-        let user = await User.findOne({_id: id})
+        // let user = await User.findOne({_id: id})
+        let user = req.user
         let connections = user["connections"]
-        res.send(connections)
+        let connectionsSet = new Set();
+        for(let i=0; i<connections.length; i++){
+            connectionsSet.add(connections[i].connection)
+        }
+        await user.populate({path: 'collabs'}).execPopulate()
+        for(let j=0; j<user.collabs.length; j++){
+            for(let k=0; k<user.collabs[j].collaborators.length; k++){
+                if(user.collabs[j].collaborators[k].status == "Yes"){
+                    connectionsSet.add(user.collabs[j].collaborators[k].collaborator)
+                }
+            }
+        }
+        if(connectionsSet.length == 0){
+            const error = new ErrorMsg('You have no connections!', 404)
+            return next(error)
+        }
+        res.send(connectionsSet)
     } catch(e){
         const error = new ErrorMsg("Oops! Something went wrong. Try again", 500)
         return next(error)
